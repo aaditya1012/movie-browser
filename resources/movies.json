@@ -1,0 +1,44 @@
+{
+  "movie_list": [
+    {
+      "movie_title": "The karate kid",
+      "poster_image": "random.png",
+      "release_year": 2015,
+      "genre": "action",
+      "rating": 7.5,
+      "is_favourite": false
+    },
+    {
+      "movie_title": "Skyfall",
+      "poster_image": "random.png",
+      "release_year": 2015,
+      "genre": "action",
+      "rating": 7.9,
+      "is_favourite": false
+    },
+    {
+      "movie_title": "The Grudge",
+      "poster_image": "random.png",
+      "release_year": 2015,
+      "genre": "horror",
+      "rating": 9,
+      "is_favourite": false
+    },
+    {
+      "movie_title": "Pulp Fiction",
+      "poster_image": "random.png",
+      "release_year": 2015,
+      "genre": "drama",
+      "rating": 8,
+      "is_favourite": false
+    },
+    {
+      "movie_title": "American Psycho",
+      "poster_image": "random.png",
+      "release_year": 2015,
+      "genre": "thriller",
+      "rating": 7.5,
+      "is_favourite": false
+    }
+  ]
+}
