@@ -1,23 +1,23 @@
-/* Navbar styles */
+/* Navbar Styles */
 nav {
-    background-color: #333;
-    color: white;
-    display: flex;
-    justify-content: space-between;
-    padding: 10px 20px;
-  }
-  
-  nav h1 {
-    margin: 0;
-  }
-  
-  nav a {
-    color: white;
-    text-decoration: none;
-    margin: 0 10px;
-  }
-  
-  nav a:hover {
-    text-decoration: underline;
-  }
-  
+  background-color: #333;
+  color: rgb(233, 8, 8);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+}
+
+nav h1 {
+  margin: 0;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  margin: 0 10px;
+}
+
+nav a:hover {
+  text-decoration: underline;
+}

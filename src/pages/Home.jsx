@@ -1,112 +1,78 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import MovieList from '../components/MovieList';
-import FilterModal from '../components/FilterModal';
+import SearchBar from  '../components/SearchBar';
 
 const Home = () => {
   const [movies, setMovies] = useState([]);
   const [filteredMovies, setFilteredMovies] = useState([]);
-  const [showFilterModal, setShowFilterModal] = useState(false);
-  const [filters, setFilters] = useState({
-    minYear: 1900,
-    maxYear: new Date().getFullYear(),
-    genre: '',
-    rating: [0, 10],
-  });
-  const [page, setPage] = useState(1); // Page number for infinite scrolling
-  const [loading, setLoading] = useState(false); // Loading state for infinite scrolling
-  const [hasMore, setHasMore] = useState(true); // To track if more movies are available
-  const observer = useRef(); // Ref for observing the last movie card
+  const [searchQuery, setSearchQuery] = useState('');
+  const [page, setPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // To store unique movie IDs
+  const movieSet = new Set();
 
   useEffect(() => {
-    fetchMovies(page);
+    const fetchMovies = async () => {
+      setIsLoading(true);
+      const apiKey = import.meta.env.VITE_TMDB_API_KEY;
+      const response = await fetch(
+        `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&page=${page}`
+      );
+      const data = await response.json();
+
+      // Filter out duplicate movies using the Set to check IDs
+      const newMovies = data.results.filter((movie) => {
+        if (!movieSet.has(movie.id)) {
+          movieSet.add(movie.id); // Add movie ID to the Set
+          return true;  // Include movie in the new list
+        }
+        return false;  // Exclude duplicate movie
+      });
+
+      // Add unique movies to the state
+      setMovies((prevMovies) => [...prevMovies, ...newMovies]);
+      setFilteredMovies((prevMovies) => [...prevMovies, ...newMovies]);
+      setIsLoading(false);
+    };
+
+    fetchMovies();
   }, [page]);
 
   useEffect(() => {
-    applyFilters(filters);
-  }, [filters, movies]);
-
-  const fetchMovies = async (pageNumber) => {
-    const apiKey = import.meta.env.VITE_TMDB_API_KEY; // Replace with your actual TMDB API key
-    const url = `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&page=${pageNumber}`;
-
-    try {
-      setLoading(true);
-      const res = await fetch(url);
-
-      if (!res.ok) {
-        throw new Error(`API request failed with status ${res.status}`);
-      }
-
-      const data = await res.json();
-
-      // Avoid duplicates when updating movies
-      const newMovies = data.results.filter(
-        (movie) => !movies.some((existing) => existing.id === movie.id)
-      );
-
-      setMovies((prev) => [...prev, ...newMovies]);
-      setFilteredMovies((prev) => [...prev, ...newMovies]);
-
-      if (data.page >= data.total_pages) {
-        setHasMore(false); // No more movies to load
-      }
-    } catch (error) {
-      console.error('Error fetching movies:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const applyFilters = ({ minYear, maxYear, genre, rating }) => {
-    const filtered = movies.filter((movie) => {
-      const releaseYear = parseInt(movie.release_date.split('-')[0], 10);
-      return (
-        releaseYear >= minYear &&
-        releaseYear <= maxYear &&
-        (genre ? movie.genre_ids.includes(genre) : true) &&
-        movie.vote_average >= rating[0] &&
-        movie.vote_average <= rating[1]
-      );
-    });
-    setFilteredMovies(filtered);
-  };
-
-  const toggleFilterModal = () => {
-    setShowFilterModal(!showFilterModal);
-  };
-
-  const lastMovieRef = (node) => {
-    if (loading) return;
-
-    if (observer.current) observer.current.disconnect();
-    observer.current = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting && hasMore) {
+    const handleScroll = () => {
+      if (
+        window.innerHeight + document.documentElement.scrollTop >=
+        document.documentElement.offsetHeight - 200
+      ) {
         setPage((prevPage) => prevPage + 1);
       }
-    });
+    };
 
-    if (node) observer.current.observe(node);
-  };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const filtered = movies.filter((movie) =>
+      movie.title.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setFilteredMovies(filtered);
+  }, [searchQuery, movies]);
 
   return (
     <div>
-      <header>
-        <button onClick={toggleFilterModal}>Show Filters</button>
-      </header>
-
-      {/* Filter Modal */}
-      {showFilterModal && (
-        <FilterModal
-          applyFilters={setFilters}
-          closeModal={toggleFilterModal}
-        />
-      )}
+      {/* Search Bar */}
+      <div className="search-filter-container">
+        {/* Search Bar */}
+        <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+      </div>
 
       {/* Movie List */}
-      <MovieList movies={filteredMovies} lastMovieRef={lastMovieRef} />
+      <MovieList movies={filteredMovies} />
 
       {/* Loading Spinner */}
-      {loading && <div className="spinner">Loading...</div>}
+      {isLoading && <div className="loading-spinner"></div>}
     </div>
   );
 };

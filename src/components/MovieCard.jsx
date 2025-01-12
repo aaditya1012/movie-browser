@@ -29,7 +29,7 @@ const MovieCard = ({ movie }) => {
   return (
     <div
       style={{
-        width: '200px',
+        width: '230px',
         position: 'relative',
         border: '1px solid #ddd',
         borderRadius: '8px',
@@ -47,6 +47,7 @@ const MovieCard = ({ movie }) => {
       />
       <h3
         style={{
+          fontFamily:'cursive',
           fontSize: '16px',
           margin: '10px 0',
           overflow: 'hidden',
@@ -57,19 +58,16 @@ const MovieCard = ({ movie }) => {
       >
         {title}
       </h3>
-      <p style={{ fontSize: '14px', color: '#666', marginBottom: '10px' }}>
+      <p style={{ fontFamily:'cursive',fontSize: '14px', color: '#666', marginBottom: '10px' }}>
         {release_date ? new Date(release_date).getFullYear() : 'N/A'}
       </p>
       <FontAwesomeIcon
+        className='favorite-btn'
         icon={faStar}
         size="lg"
         onClick={handleFavoriteToggle}
         style={{
-          position: 'absolute',
-          top: '10px',
-          right: '10px',
           color: isFavorite ? 'gold' : 'gray',
-          cursor: 'pointer',
         }}
         title={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
       />
