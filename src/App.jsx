@@ -1,29 +1,19 @@
-import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import MovieList from "./components/MovieList";
-import MovieDetails from "./components/MovieDetails";
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import Home from './pages/Home';
+import FavoritesPage from './pages/FavoritesPage'; // Optional
 
 const App = () => {
-  const [movies, setMovies] = useState([]);
-
-  useEffect(() => {
-    const fetchMovies = async () => {
-      const response = await fetch(
-        `https://api.themoviedb.org/3/movie/popular?api_key=${import.meta.env.VITE_TMDB_API_KEY}`
-      );
-      const data = await response.json();
-      setMovies(data.results);
-    };
-
-    fetchMovies();
-  }, []);
-
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<MovieList movies={movies} />} />
-        <Route path="/movie/:id" element={<MovieDetails movies={movies} />} />
-      </Routes>
+      <Navbar />
+      <div style={{ padding: '20px' }}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/favorites" element={<FavoritesPage />} />
+        </Routes>
+      </div>
     </Router>
   );
 };

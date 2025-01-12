@@ -1,31 +1,22 @@
-import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import React, { useState } from 'react';
 
 const SearchBar = ({ onSearch }) => {
- 
-  const fetchData = (value) =>{
-      fetch("https")
-  }
+  const [value, setValue] = useState('');
 
-  const handleSearch = (query) => {
-    if (query.trim() === "") {
-      setFilteredMovies(movies); // Reset to all movies if query is empty
-    } else {
-      const lowerCaseQuery = query.toLowerCase();
-      setFilteredMovies(
-        movies.filter((movie) =>
-          movie.title.toLowerCase().includes(lowerCaseQuery)
-        )
-      );
-    }
+  const handleInputChange = (e) => {
+    const newValue = e.target.value;
+    setValue(newValue);
+    onSearch(newValue);
   };
 
   return (
-    <div className="input-wrapper">
-      <FontAwesomeIcon icon={faMagnifyingGlass} />
-      <input className="search-input" placeholder="Serach for Movies..." />
-    </div>
+    <input
+      type="text"
+      placeholder="Search for a movie..."
+      value={value}
+      onChange={handleInputChange}
+      style={{ padding: '8px', width: '100%' }}
+    />
   );
 };
 
