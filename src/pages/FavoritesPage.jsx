@@ -5,7 +5,7 @@ const FavoritesPage = () => {
 
   return (
     <div style={{ padding: '20px' }}>
-      <h1 style={{ textAlign: 'center', marginBottom: '20px' }}>
+      <h1 style={{ textAlign: 'center', marginBottom: '20px', fontFamily:'cursive'}}>
         Your Favorite Movies
       </h1>
       {favorites.length === 0 ? (
@@ -47,6 +47,7 @@ const FavoritesPage = () => {
               />
               <h3
                 style={{
+                  fontFamily:'cursive',
                   fontSize: '16px',
                   margin: '10px 0',
                   overflow: 'hidden',
@@ -57,7 +58,7 @@ const FavoritesPage = () => {
               >
                 {movie.title}
               </h3>
-              <p style={{ fontSize: '14px', color: '#666', marginBottom: '10px' }}>
+              <p style={{ fontFamily:'cursive',fontSize: '14px', color: '#666', marginBottom: '10px' }}>
                 {movie.release_date
                   ? new Date(movie.release_date).getFullYear()
                   : 'N/A'}
